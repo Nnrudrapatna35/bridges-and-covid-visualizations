@@ -26,9 +26,22 @@ library(rms)
 
 ### Research Question and Objective
 
+How has COVID-19 impacted border crossing on both the US-Mexican and US-Canadian borders?
+
 
 ### The Data 
 
+www.explore.dot.gov
+
+January - April 2019
+January - April 2020
+
+Bus Passengers
+Pedestrians
+Personal Vehicle Passengers
+Rail Containers Full
+Train Passengers
+Truck Containers Full
 
 ### Exploratory Data Analysis
 
