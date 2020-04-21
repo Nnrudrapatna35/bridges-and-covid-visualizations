@@ -21,27 +21,32 @@ library(rms)
 ```
 
 ```{r load-data, message = FALSE}
-#nba_social_power <- read_csv("../data/nba.csv")
+
 ```
 
 ### Research Question and Objective
 
-How has COVID-19 impacted border crossing on both the US-Mexican and US-Canadian borders?
+How has COVID-19 impacted unemployment claims?
 
 
 ### The Data 
 
-www.explore.dot.gov
+`https://oui.doleta.gov/unemploy/archive.asp`
 
-January - April 2019
-January - April 2020
+Feb 1
+Feb 8
+Feb 15
+Feb 22
+Feb 29
+March 7
+March 14
+March 21
+March 28
+April 4
 
-Bus Passengers
-Pedestrians
-Personal Vehicle Passengers
-Rail Containers Full
-Train Passengers
-Truck Containers Full
+Join by week
+
+State population level
 
 ### Exploratory Data Analysis
 
