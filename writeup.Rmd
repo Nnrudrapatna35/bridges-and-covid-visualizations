@@ -1,1 +1,44 @@
+---
+title: "COVID-19 DataFest"
+author: "Nagaprasad Rudrapatna and Jackson Muraika"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+```
+
+```{r load-packages, message = FALSE}
+library(tidyverse)
+library(broom)
+library(stringr)
+library(knitr)
+library(tidyverse)
+library(gridExtra)
+library(leaps)
+library(rms)
+```
+
+```{r load-data, message = FALSE}
+#nba_social_power <- read_csv("../data/nba.csv")
+```
+
+### Research Question and Objective
+
+
+### The Data 
+
+
+### Exploratory Data Analysis
+
+
+### Modeling Approach
+
+
+### Final Model and Brief Discussion of Assumptions
+
+
+### Interpretations and Significance
+
 
