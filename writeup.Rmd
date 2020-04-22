@@ -21,7 +21,7 @@ library(rms)
 ```
 
 ```{r load-data, message = FALSE}
-
+states <- read_csv("data/statePopulation.csv")
 ```
 
 ### Research Question and Objective
