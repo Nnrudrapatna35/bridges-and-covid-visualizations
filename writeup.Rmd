@@ -24,56 +24,45 @@ library(rms)
 whirlpool <- read_csv("data/whirlpool.csv")
 lewiston_queenston <- read_csv("data/lewistonQueenston.csv")
 rainbow <- read_csv("data/rainbow.csv")
-bridges_total <- read_csv("data/combined_bridges.csv")
-
-whirlpool <- whirlpool %>%
-  select(Date, Day, `US Bound`)
-
-lewiston_queenston <- lewiston_queenston %>%
-  select(Date, Day, `US Bound`)
-
-rainbow <- rainbow %>%
-  select(Date, Day, `US Bound`)
+bridges_total <- read_csv("data/combined_bridges1.csv")
 
 bridges_total <- bridges_total %>%
-  select(Date, Day, Auto, Bus, Truck, `RV/Limo`, `US Bound`)
-
-glimpse(whirlpool)
-glimpse(rainbow)
-glimpse(lewiston_queenston)
-glimpse(bridges_total)
-```
-
-```{r join}
+  select(Month, Day, `Day of Week`, Auto, Bus, Truck, `RV/Limo`, `Total Vehicles`) %>%
+  mutate(Month = as.factor(Month),
+         Month = fct_relevel(Month, "January", "February", "March", "April"))
 
 ```
 
-### Research Question and Objective
+### Topic
 
-How has COVID-19 impacted unemployment claims?
-
-
-### The Data 
-
-`https://oui.doleta.gov/unemploy/archive.asp`
-
-Feb 1
-Feb 8
-Feb 15
-Feb 22
-Feb 29
-March 7
-March 14
-March 21
-March 28
-April 4
-
-Join by week
-
-State population level
+We will investigate bridge traffic statistics from the Niagara Falls Bridge Commission and determine whether and how the COVID-19 pandemic has affected activity at the Lewiston-Queenston, Rainbow, and Whirlpool bridges. The Niagara Falls Bridges are the second-busiest port of entry between US and Canada (behind Kennedy International); thus, these traffic statistics offer a unique opportunity to examine how port crossing has been affected by the COVID-19 pandemic.
 
 ### Exploratory Data Analysis
 
+We will begin by examining the aggregate data, which combines the traffic statistics from all three bridges -- Lewiston-Queenston, Rainbow, and Whirlpool.
+
+```{r}
+bridges_total1 <- bridges_total %>%
+  group_by(Month) %>%
+  summarise(total = sum(`Total Vehicles`)) %>%
+  arrange(total)
+bridges_total1
+```
+
+As we can see from the table above, bridge traffic was similar in January and February, with about 200,000 vehicles crossing in each month. However, when comparing February to March, we notice a large discrepancy in the number of vehicles -- roughly 80,000 less vehicles! Furthermore, comparing March to April reveals an even greater discrepancy -- almost 100,000 less vehicles! In sum, from January 2020 to April 2020, the number of vehicles crossing the Niagara Falls Bridges drastically decreased (approximately -180,000 vehicles).
+
+Of course, this aligns with our expectations given the lockdown and social distancing guidelines which have been in place in March and April 2020.
+
+```{r}
+ggplot(data = bridges_total1, mapping = aes(x = Month, y = total)) +
+  geom_point(color = "red") +
+  labs(title = "Total Number of Crossing Vehicles",
+       subtitle = "By Month",
+       x = "Month",
+       y = "Number of Crossing Vehicles")
+```
+
+Based on the scatterplot above, there seems to be a nonlinear relationship between month of the year and the number of vehicles crossing the bridges.
 
 ### Modeling Approach
 
