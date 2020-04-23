@@ -2,10 +2,13 @@
 title: "COVID-19 DataFest"
 author: "Nagaprasad Rudrapatna and Jackson Muraika"
 date: "`r Sys.Date()`"
-output: pdf_document
+output: 
+  pdf_document:
+    fig_width: 5
+    fig_height: 3
 ---
 
-```{r setup, include = FALSE}
+```{r set-up, include = FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 ```
 
@@ -21,15 +24,17 @@ library(rms)
 ```
 
 ```{r load-data, message = FALSE}
-whirlpool <- read_csv("data/whirlpool.csv")
-lewiston_queenston <- read_csv("data/lewistonQueenston.csv")
-rainbow <- read_csv("data/rainbow.csv")
+# whirlpool <- read_csv("data/whirlpool.csv")
+# lewiston_queenston <- read_csv("data/lewistonQueenston.csv")
+# rainbow <- read_csv("data/rainbow.csv")
 bridges_total <- read_csv("data/combined_bridges1.csv")
 
 bridges_total <- bridges_total %>%
   select(Month, Day, `Day of Week`, Auto, Bus, Truck, `RV/Limo`, `Total Vehicles`) %>%
   mutate(Month = as.factor(Month),
-         Month = fct_relevel(Month, "January", "February", "March", "April"))
+         Month = fct_relevel(Month, "January", "February", "March", "April"),
+         `Day of Week` = as.factor(`Day of Week`),
+         `Day of Week` = fct_relevel(`Day of Week`, "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
 
 ```
 
@@ -132,7 +137,75 @@ ggplot(data = bridges_total5, mapping = aes(x = Month, y = totalRL)) +
        y = "Number of Crossing RVs/Limos")
 ```
 
-### Model
+```{r}
+bridges_jan <- bridges_total %>%
+  filter(Month == "January") %>%
+  group_by(`Day of Week`) %>%
+  summarise(total = sum(`Total Vehicles`)) %>%
+  arrange(desc(total))
+bridges_jan
+```
 
-Now, we will attempt to fit a multiple linear regression model to explain the variation in the number of vehicles crossing the bridges based on the 
+```{r}
+ggplot(data = bridges_jan, mapping = aes(x = `Day of Week`, y = total)) +
+  geom_point(color = "blue") +
+  labs(title = "Total Number of Crossing Vehicles in January",
+       subtitle = "By Day of Week",
+       x = "Day of Week",
+       y = "Number of Crossing Vehicles")
+```
+
+```{r}
+bridges_feb <- bridges_total %>%
+  filter(Month == "February") %>%
+  group_by(`Day of Week`) %>%
+  summarise(total = sum(`Total Vehicles`)) %>%
+  arrange(desc(total))
+bridges_feb
+```
+
+```{r}
+ggplot(data = bridges_feb, mapping = aes(x = `Day of Week`, y = total)) +
+  geom_point(color = "blue") +
+  labs(title = "Total Number of Crossing Vehicles in February",
+       subtitle = "By Day of Week",
+       x = "Day of Week",
+       y = "Number of Crossing Vehicles")
+```
+
+```{r}
+bridges_mar <- bridges_total %>%
+  filter(Month == "March") %>%
+  group_by(`Day of Week`) %>%
+  summarise(total = sum(`Total Vehicles`)) %>%
+  arrange(desc(total))
+bridges_mar
+```
+
+```{r}
+ggplot(data = bridges_mar, mapping = aes(x = `Day of Week`, y = total)) +
+  geom_point(color = "blue") +
+  labs(title = "Total Number of Crossing Vehicles",
+       subtitle = "By Day of Week in March",
+       x = "Day of Week",
+       y = "Number of Crossing Vehicles")
+```
+
+```{r}
+bridges_apr <- bridges_total %>%
+  filter(Month == "April") %>%
+  group_by(`Day of Week`) %>%
+  summarise(total = sum(`Total Vehicles`)) %>%
+  arrange(desc(total))
+bridges_apr
+```
+
+```{r}
+ggplot(data = bridges_apr, mapping = aes(x = `Day of Week`, y = total)) +
+  geom_point(color = "blue") +
+  labs(title = "Total Number of Crossing Vehicles",
+       subtitle = "By Day of Week in April",
+       x = "Day of Week",
+       y = "Number of Crossing Vehicles")
+```
 
