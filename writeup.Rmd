@@ -2,10 +2,7 @@
 title: "COVID-19 DataFest"
 author: "Nagaprasad Rudrapatna and Jackson Muraika"
 date: "`r Sys.Date()`"
-output: 
-  pdf_document:
-    fig_width: 5
-    fig_height: 3
+output: pdf_document
 ---
 
 ```{r set-up, include = FALSE}
@@ -17,10 +14,6 @@ library(tidyverse)
 library(broom)
 library(stringr)
 library(knitr)
-library(tidyverse)
-library(gridExtra)
-library(leaps)
-library(rms)
 ```
 
 ```{r load-data, message = FALSE}
@@ -59,17 +52,40 @@ As we can see from the table above, bridge traffic was similar in January and Fe
 Of course, this aligns with our expectations given the lockdown and social distancing guidelines which have been in place in March and April 2020.
 
 ```{r}
-ggplot(data = bridges_total1, mapping = aes(x = Month, y = total)) +
-  geom_point(color = "red") +
-  labs(title = "Total Number of Crossing Vehicles",
-       subtitle = "By Month",
+ggplot(data = bridges_total, mapping = aes(x = Month, y = Auto)) +
+  geom_violin(color = "orange") +
+  labs(title = "Total Number of Daily Crossing Autos Per Month",
+       subtitle = "On Niagara Falls Bridges",
        x = "Month",
-       y = "Number of Crossing Vehicles")
+       y = "Number of Daily Crossing Autos")
 ```
 
-Based on the scatterplot above, there seems to be a nonlinear relationship between month of the year and the number of vehicles crossing the bridges.
+```{r}
+ggplot(data = bridges_total, mapping = aes(x = Month, y = Bus)) +
+  geom_violin(color = "orange") +
+  labs(title = "Total Number of Daily Crossing Buses Per Month",
+       subtitle = "On Niagara Falls Bridges",
+       x = "Month",
+       y = "Number of Daily Crossing Buses")
+```
 
-Now, we will examine trends in particular types of vehicles:
+```{r}
+ggplot(data = bridges_total, mapping = aes(x = Month, y = Truck)) +
+  geom_violin(color = "orange") +
+  labs(title = "Total Number of Daily Crossing Trucks Per Month",
+       subtitle = "On Niagara Falls Bridges",
+       x = "Month",
+       y = "Number of Daily Crossing Trucks")
+```
+
+```{r}
+ggplot(data = bridges_total, mapping = aes(x = Month, y = `RV/Limo`)) +
+  geom_violin(color = "orange") +
+  labs(title = "Total Number of Daily Crossing RVs/Limos Per Month",
+       subtitle = "On Niagara Falls Bridges",
+       x = "Month",
+       y = "Number of Daily Crossing RVs/Limos")
+```
 
 ```{r}
 bridges_total2 <- bridges_total %>%
@@ -79,135 +95,79 @@ bridges_total2 <- bridges_total %>%
 bridges_total2
 ```
 
-```{r}
-ggplot(data = bridges_total2, mapping = aes(x = Month, y = totalA)) +
-  geom_point(color = "red") +
-  labs(title = "Total Number of Crossing Autos",
-       subtitle = "By Month",
-       x = "Month",
-       y = "Number of Crossing Autos")
-```
+```{r prop}
+bridges_total <- bridges_total %>%
+  mutate(totalA = case_when(Month == "January" ~ 167326, Month == "February" ~ 170191, Month == "March" ~ 90570, Month == "April" ~ 4359))
 
-```{r}
-bridges_total3 <- bridges_total %>%
+bridges_total <- bridges_total %>%
   group_by(Month) %>%
-  summarise(totalB = sum(Bus)) %>%
-  arrange(totalB)
-bridges_total3
+  count(totalA) %>%
+  mutate(avg_Auto = totalA / n)
 ```
 
 ```{r}
-ggplot(data = bridges_total3, mapping = aes(x = Month, y = totalB)) +
-  geom_point(color = "red") +
-  labs(title = "Total Number of Crossing Buses",
-       subtitle = "By Month",
+ggplot(data = bridges_total, mapping = aes(x = Month, y = avg_Auto)) +
+  geom_bar(stat = "identity", fill = "orange") +
+  labs(title = "Average Number of Daily Crossing Autos Per Month",
+       subtitle = "On Niagara Falls Bridges",
        x = "Month",
-       y = "Number of Crossing Buses")
+       y = "Average Number of Daily Crossing Autos")
 ```
 
 ```{r}
-bridges_total4 <- bridges_total %>%
+bridges_total <- bridges_total %>%
+  mutate(totalB = case_when(Month == "January" ~ 338, Month == "February" ~ 364, Month == "March" ~ 197, Month == "April" ~ 2))
+
+bridges_total <- bridges_total %>%
   group_by(Month) %>%
-  summarise(totalT = sum(Truck)) %>%
-  arrange(totalT)
-bridges_total4
+  count(totalB) %>%
+  mutate(avg_Bus = totalB / nn)
 ```
 
 ```{r}
-ggplot(data = bridges_total4, mapping = aes(x = Month, y = totalT)) +
-  geom_point(color = "red") +
-  labs(title = "Total Number of Crossing Trucks",
-       subtitle = "By Month",
+ggplot(data = bridges_total, mapping = aes(x = Month, y = avg_Bus)) +
+  geom_bar(stat = "identity", fill = "orange") +
+  labs(title = "Average Number of Daily Crossing Buses Per Month",
+       subtitle = "On Niagara Falls Bridges",
        x = "Month",
-       y = "Number of Crossing Trucks")
+       y = "Average Number of Daily Crossing Buses")
 ```
 
 ```{r}
-bridges_total5 <- bridges_total %>%
+bridges_total <- bridges_total %>%
+  mutate(totalT = case_when(Month == "January" ~ 30997, Month == "February" ~ 28931, Month == "March" ~ 30878, Month == "April" ~ 16020))
+
+bridges_total <- bridges_total %>%
   group_by(Month) %>%
-  summarise(totalRL = sum(`RV/Limo`)) %>%
-  arrange(totalRL)
-bridges_total5
+  count(totalT) %>%
+  mutate(avg_Truck = totalT / n)
 ```
 
 ```{r}
-ggplot(data = bridges_total5, mapping = aes(x = Month, y = totalRL)) +
-  geom_point(color = "red") +
-  labs(title = "Total Number of Crossing RVs/Limos",
-       subtitle = "By Month",
+ggplot(data = bridges_total, mapping = aes(x = Month, y = avg_Truck)) +
+  geom_bar(stat = "identity", fill = "orange") +
+  labs(title = "Average Number of Daily Crossing Trucks Per Month",
+       subtitle = "On Niagara Falls Bridges",
        x = "Month",
-       y = "Number of Crossing RVs/Limos")
+       y = "Average Number of Daily Crossing Trucks")
 ```
 
 ```{r}
-bridges_jan <- bridges_total %>%
-  filter(Month == "January") %>%
-  group_by(`Day of Week`) %>%
-  summarise(total = sum(`Total Vehicles`)) %>%
-  arrange(desc(total))
-bridges_jan
+bridges_total <- bridges_total %>%
+  mutate(totalRV = case_when(Month == "January" ~ 126, Month == "February" ~ 108, Month == "March" ~ 116, Month == "April" ~ 28))
+
+bridges_total <- bridges_total %>%
+  group_by(Month) %>%
+  count(totalRV) %>%
+  mutate(avg_RV = totalRV / nn)
 ```
 
 ```{r}
-ggplot(data = bridges_jan, mapping = aes(x = `Day of Week`, y = total)) +
-  geom_point(color = "blue") +
-  labs(title = "Total Number of Crossing Vehicles in January",
-       subtitle = "By Day of Week",
-       x = "Day of Week",
-       y = "Number of Crossing Vehicles")
-```
-
-```{r}
-bridges_feb <- bridges_total %>%
-  filter(Month == "February") %>%
-  group_by(`Day of Week`) %>%
-  summarise(total = sum(`Total Vehicles`)) %>%
-  arrange(desc(total))
-bridges_feb
-```
-
-```{r}
-ggplot(data = bridges_feb, mapping = aes(x = `Day of Week`, y = total)) +
-  geom_point(color = "blue") +
-  labs(title = "Total Number of Crossing Vehicles in February",
-       subtitle = "By Day of Week",
-       x = "Day of Week",
-       y = "Number of Crossing Vehicles")
-```
-
-```{r}
-bridges_mar <- bridges_total %>%
-  filter(Month == "March") %>%
-  group_by(`Day of Week`) %>%
-  summarise(total = sum(`Total Vehicles`)) %>%
-  arrange(desc(total))
-bridges_mar
-```
-
-```{r}
-ggplot(data = bridges_mar, mapping = aes(x = `Day of Week`, y = total)) +
-  geom_point(color = "blue") +
-  labs(title = "Total Number of Crossing Vehicles",
-       subtitle = "By Day of Week in March",
-       x = "Day of Week",
-       y = "Number of Crossing Vehicles")
-```
-
-```{r}
-bridges_apr <- bridges_total %>%
-  filter(Month == "April") %>%
-  group_by(`Day of Week`) %>%
-  summarise(total = sum(`Total Vehicles`)) %>%
-  arrange(desc(total))
-bridges_apr
-```
-
-```{r}
-ggplot(data = bridges_apr, mapping = aes(x = `Day of Week`, y = total)) +
-  geom_point(color = "blue") +
-  labs(title = "Total Number of Crossing Vehicles",
-       subtitle = "By Day of Week in April",
-       x = "Day of Week",
-       y = "Number of Crossing Vehicles")
+ggplot(data = bridges_total, mapping = aes(x = Month, y = avg_RV)) +
+  geom_bar(stat = "identity", fill = "orange") +
+  labs(title = "Average Number of Daily Crossing RVs/Limos Per Month",
+       subtitle = "On Niagara Falls Bridges",
+       x = "Month",
+       y = "Average Number of Daily Crossing RVs/Limos")
 ```
 
