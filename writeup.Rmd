@@ -64,12 +64,75 @@ ggplot(data = bridges_total1, mapping = aes(x = Month, y = total)) +
 
 Based on the scatterplot above, there seems to be a nonlinear relationship between month of the year and the number of vehicles crossing the bridges.
 
-### Modeling Approach
+```{r}
+bridges_total2 <- bridges_total %>%
+  group_by(Month) %>%
+  summarise(totalA = sum(Auto)) %>%
+  arrange(totalA)
+bridges_total2
+```
 
+```{r}
+ggplot(data = bridges_total2, mapping = aes(x = Month, y = totalA)) +
+  geom_point(color = "red") +
+  labs(title = "Total Number of Crossing Autos",
+       subtitle = "By Month",
+       x = "Month",
+       y = "Number of Crossing Autos")
+```
 
-### Final Model and Brief Discussion of Assumptions
+```{r}
+bridges_total3 <- bridges_total %>%
+  group_by(Month) %>%
+  summarise(totalB = sum(Bus)) %>%
+  arrange(totalB)
+bridges_total3
+```
 
+```{r}
+ggplot(data = bridges_total3, mapping = aes(x = Month, y = totalB)) +
+  geom_point(color = "red") +
+  labs(title = "Total Number of Crossing Buses",
+       subtitle = "By Month",
+       x = "Month",
+       y = "Number of Crossing Buses")
+```
 
-### Interpretations and Significance
+```{r}
+bridges_total4 <- bridges_total %>%
+  group_by(Month) %>%
+  summarise(totalT = sum(Truck)) %>%
+  arrange(totalT)
+bridges_total4
+```
 
+```{r}
+ggplot(data = bridges_total4, mapping = aes(x = Month, y = totalT)) +
+  geom_point(color = "red") +
+  labs(title = "Total Number of Crossing Trucks",
+       subtitle = "By Month",
+       x = "Month",
+       y = "Number of Crossing Trucks")
+```
+
+```{r}
+bridges_total5 <- bridges_total %>%
+  group_by(Month) %>%
+  summarise(totalRL = sum(`RV/Limo`)) %>%
+  arrange(totalRL)
+bridges_total5
+```
+
+```{r}
+ggplot(data = bridges_total5, mapping = aes(x = Month, y = totalRL)) +
+  geom_point(color = "red") +
+  labs(title = "Total Number of Crossing RVs/Limos",
+       subtitle = "By Month",
+       x = "Month",
+       y = "Number of Crossing RVs/Limos")
+```
+
+### Model
+
+Now, we will attempt to fit a multiple linear regression model to explain the variation in the number of vehicles crossing the bridges based on the 
 
