@@ -69,6 +69,8 @@ ggplot(data = bridges_total1, mapping = aes(x = Month, y = total)) +
 
 Based on the scatterplot above, there seems to be a nonlinear relationship between month of the year and the number of vehicles crossing the bridges.
 
+Now, we will examine trends in particular types of vehicles:
+
 ```{r}
 bridges_total2 <- bridges_total %>%
   group_by(Month) %>%
